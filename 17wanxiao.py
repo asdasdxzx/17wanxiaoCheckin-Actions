@@ -191,41 +191,7 @@ def healthy_check_in(token, post_dict):
         return dict(status=0, errmsg=errmsg)
 
 
-def campus_check_in(username, token, post_dict, id):
-    """
-    校内打卡
-    :param username: 电话号
-    :param token: 用户令牌
-    :param post_dict: 校内打卡数据
-    :param id: 校内打卡id
-    :return:
-    """
-    check_json = {"businessType": "epmpics", "method": "submitUpInfoSchool",
-                  "jsonData": {"deptStr": post_dict['deptStr'],
-                               "areaStr": post_dict['areaStr'],
-                               "reportdate": round(time.time() * 1000), "customerid": post_dict['customerid'],
-                               "deptid": post_dict['deptid'], "source": "app",
-                               "templateid": post_dict['templateid'], "stuNo": post_dict['stuNo'],
-                               "username": post_dict['username'], "phonenum": username,
-                               "userid": post_dict['userid'], "updatainfo": post_dict['updatainfo'],
-                               "customerAppTypeRuleId": id, "clockState": 0, "token": token},
-                  "token": token
-                  }
-    # print(check_json)
-    try:
-        res = requests.post("https://reportedh5.17wanxiao.com/sass/api/epmpics", json=check_json).json()
 
-        # 以json格式打印json字符串
-        if res['code'] != '10000':
-            logging.warning(res)
-            return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type=post_dict['templateid'])
-        else:
-            logging.info(res)
-            return dict(status=1, res=res, post_dict=post_dict, check_json=check_json, type=post_dict['templateid'])
-    except BaseException:
-        errmsg = f"```校内打卡请求出错```"
-        logging.warning('校内打卡请求出错')
-        return dict(status=0, errmsg=errmsg)
 
 
 def check_in(username, password):
